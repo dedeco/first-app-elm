@@ -35,7 +35,10 @@ update : Msg -> Model -> Model
 update msg model =
     case msg of
         AddCalorie ->
-            { model | total = model.total + model.calories }
+            { model
+                | total = model.total + model.calories
+                , calories = 0
+            }
 
         Change s ->
             { model | calories = (String.toInt s) |> Result.toMaybe |> Maybe.withDefault 0 }
@@ -53,7 +56,16 @@ view model =
     div []
         [ h3 []
             [ text ("Total Calories: " ++ (toString model.total)) ]
-        , input [ placeholder "Type calories", onInput Change ]
+        , input
+            [ placeholder "Type calories"
+            , onInput Change
+            , value
+                (if model.calories == 0 then
+                    ""
+                 else
+                    toString model.calories
+                )
+            ]
             []
         , button
             [ type_ "button"
